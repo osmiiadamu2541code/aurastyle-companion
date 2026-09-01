@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AurafitRouteImport } from './routes/aurafit'
 import { Route as WardrobeRouteImport } from './routes/wardrobe'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AurafitRoute = AurafitRouteImport.update({
+  id: '/aurafit',
+  path: '/aurafit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WardrobeRoute = WardrobeRouteImport.update({
@@ -25,27 +31,31 @@ const WardrobeRoute = WardrobeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/aurafit': typeof AurafitRoute
   '/wardrobe': typeof WardrobeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aurafit': typeof AurafitRoute
   '/wardrobe': typeof WardrobeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/aurafit': typeof AurafitRoute
   '/wardrobe': typeof WardrobeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/wardrobe'
+  fullPaths: '/' | '/aurafit' | '/wardrobe'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/wardrobe'
-  id: '__root__' | '/' | '/wardrobe'
+  to: '/' | '/aurafit' | '/wardrobe'
+  id: '__root__' | '/' | '/aurafit' | '/wardrobe'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AurafitRoute: typeof AurafitRoute
   WardrobeRoute: typeof WardrobeRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aurafit': {
+      id: '/aurafit'
+      path: '/aurafit'
+      fullPath: '/aurafit'
+      preLoaderRoute: typeof AurafitRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/wardrobe': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AurafitRoute: AurafitRoute,
   WardrobeRoute: WardrobeRoute,
 }
 export const routeTree = rootRouteImport
