@@ -1,7 +1,17 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { useApp } from "@/lib/app-context";
 import { CONDITION_LABEL, getTodayWeather, OUTFIT } from "@/lib/content";
+import {
+  bottomSize,
+  fetchMeasurements,
+  FIT_COPY,
+  fitLabelKey,
+  LAYERING_COPY,
+  topSize,
+  type PreferredFit,
+} from "@/lib/measurements";
 
 export const Route = createFileRoute("/")({
   head: () => ({
