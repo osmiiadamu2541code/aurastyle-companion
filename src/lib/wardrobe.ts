@@ -12,6 +12,7 @@ export type WardrobeItem = {
   season: string;
   occasion: string;
   fabric_care: string;
+  fit_note: string;
   created_at: string;
 };
 
@@ -23,6 +24,7 @@ export type NewItem = {
   season: string;
   occasion: string;
   fabric_care: string;
+  fit_note: string;
 };
 
 export const SEASONS = ["summer", "winter", "rainy", "allseason"] as const;
