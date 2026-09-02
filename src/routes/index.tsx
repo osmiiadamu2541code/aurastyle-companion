@@ -113,6 +113,60 @@ function Home() {
           {t("navWardrobe")} →
         </Link>
       </section>
+
+      <section className="rounded-3xl border border-border bg-card p-5 shadow-warm">
+        <div className="flex items-start justify-between gap-3">
+          <h2 className="font-display text-lg font-semibold">{t("fitCardTitle")}</h2>
+          <Link
+            to="/measurements"
+            className="shrink-0 rounded-full border border-primary/30 bg-primary/8 px-3 py-1 text-[11px] font-medium text-primary"
+          >
+            {t("editFit")}
+          </Link>
+        </div>
+
+        <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+          <div className="rounded-2xl bg-secondary px-2 py-2">
+            <p className="text-[10px] text-muted-foreground">{t("suggestedFit")}</p>
+            <p className="mt-0.5 text-sm font-semibold">{t(fitKey)}</p>
+          </div>
+          <div className="rounded-2xl bg-secondary px-2 py-2">
+            <p className="text-[10px] text-muted-foreground">{t("sizeTop")}</p>
+            <p className="mt-0.5 text-sm font-semibold">{topSize(fit ?? null) ?? "—"}</p>
+          </div>
+          <div className="rounded-2xl bg-secondary px-2 py-2">
+            <p className="text-[10px] text-muted-foreground">{t("sizeBottom")}</p>
+            <p className="mt-0.5 text-sm font-semibold">{bottomSize(fit ?? null) ?? "—"}</p>
+          </div>
+        </div>
+
+        {[
+          [t("silhouette"), copy.silhouette],
+          [t("postureFriendly"), copy.posture],
+          [t("comfortFirst"), copy.comfort],
+          [t("layeringToday"), layering],
+        ].map(([label, body]) => (
+          <div key={label} className="mt-4">
+            <h3 className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">{label}</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-foreground/85">{body}</p>
+          </div>
+        ))}
+
+        {fit && (fit.comfort_needs || fit.posture_notes || fit.mobility_notes) ? (
+          <ul className="mt-4 space-y-2">
+            {[fit.comfort_needs, fit.posture_notes, fit.mobility_notes]
+              .filter(Boolean)
+              .map((line) => (
+                <li key={line} className="flex items-start gap-2 rounded-2xl bg-secondary px-3 py-2.5 text-sm leading-relaxed">
+                  <span className="mt-0.5">🤍</span>
+                  <span>{line}</span>
+                </li>
+              ))}
+          </ul>
+        ) : (
+          <p className="mt-4 text-sm text-muted-foreground">{t("noMeasurements")}</p>
+        )}
+      </section>
     </div>
   );
 }
