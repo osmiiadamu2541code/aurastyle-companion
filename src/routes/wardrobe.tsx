@@ -120,7 +120,7 @@ function Wardrobe() {
           {filtered.map((item) => (
             <article key={item.id} className="overflow-hidden rounded-3xl border border-border bg-card shadow-warm">
               <div
-                className={`grid h-28 place-items-center bg-linear-to-br ${TILE_COLORS[item.color] ?? TILE_COLORS.sand} text-5xl`}
+                className={`grid h-28 place-items-center bg-linear-to-br ${TILE_COLORS[item.color] ?? TILE_COLORS['sand']} text-5xl`}
               >
                 {item.icon}
               </div>
