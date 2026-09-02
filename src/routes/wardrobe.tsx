@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { UploadModal } from "@/components/UploadModal";
 import { useApp } from "@/lib/app-context";
+import { fetchMeasurements, fitLabelKey } from "@/lib/measurements";
 import {
   addWardrobeItem,
   deleteWardrobeItem,
@@ -46,6 +47,12 @@ function Wardrobe() {
     queryKey: ["wardrobe", profile],
     queryFn: () => fetchWardrobe(profile),
   });
+
+  const { data: fit } = useQuery({
+    queryKey: ["measurements", profile],
+    queryFn: () => fetchMeasurements(profile),
+  });
+  const fitKey = fitLabelKey(fit?.preferred_fit ?? "regular");
 
   const add = useMutation({
     mutationFn: (item: NewItem) => addWardrobeItem(item),
