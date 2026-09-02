@@ -25,6 +25,7 @@ export function UploadModal({ open, onClose, onSave }: Props) {
   const [season, setSeason] = useState<string>("allseason");
   const [occasion, setOccasion] = useState<string>("casual");
   const [care, setCare] = useState("");
+  const [fitNote, setFitNote] = useState("");
   const [saving, setSaving] = useState(false);
   const [askWhose, setAskWhose] = useState(false);
 
@@ -33,6 +34,7 @@ export function UploadModal({ open, onClose, onSave }: Props) {
   const reset = () => {
     setName("");
     setCare("");
+    setFitNote("");
     setIcon(ICON_CHOICES[0]!);
     setColor(COLOR_CHOICES[0]!);
     setSeason("allseason");
@@ -52,6 +54,7 @@ export function UploadModal({ open, onClose, onSave }: Props) {
         season,
         occasion,
         fabric_care: care.trim(),
+        fit_note: fitNote.trim(),
       });
       reset();
       onClose();
