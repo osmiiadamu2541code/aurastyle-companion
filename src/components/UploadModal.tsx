@@ -194,8 +194,19 @@ export function UploadModal({ open, onClose, onSave }: Props) {
               onChange={(e) => setCare(e.target.value)}
               placeholder={t("carePlaceholder")}
               rows={3}
+              className="mb-3 w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
+            />
+
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">
+              {t("fitNoteLabel")} <span className="text-[10px] opacity-70">({t("optional")})</span>
+            </label>
+            <input
+              value={fitNote}
+              onChange={(e) => setFitNote(e.target.value)}
+              placeholder={t("fitNotePlaceholder")}
               className="mb-4 w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
             />
+
 
             <button
               onClick={submit}

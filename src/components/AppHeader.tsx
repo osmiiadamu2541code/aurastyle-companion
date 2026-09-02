@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 import { useApp } from "@/lib/app-context";
 import { LANGS, PROFILE_NAMES, type Lang, type ProfileId } from "@/lib/i18n";
 
