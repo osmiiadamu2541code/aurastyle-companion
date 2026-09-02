@@ -48,9 +48,15 @@ export function AppHeader() {
         </div>
 
         <div className="mt-3">
-          <p className="mb-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-            {t("profile")}
-          </p>
+          <div className="mb-1.5 flex items-center justify-between gap-2">
+            <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">{t("profile")}</p>
+            <Link
+              to="/measurements"
+              className="shrink-0 rounded-full border border-primary/30 bg-primary/8 px-2.5 py-1 text-[11px] font-medium text-primary"
+            >
+              📏 {t("measurements")}
+            </Link>
+          </div>
           <div className="flex gap-2 overflow-x-auto pb-1">
             {PROFILE_ORDER.map((p) => (
               <button
