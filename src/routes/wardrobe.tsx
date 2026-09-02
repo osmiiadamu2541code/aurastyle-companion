@@ -127,6 +127,16 @@ function Wardrobe() {
                     {t(item.occasion)}
                   </span>
                 </div>
+                <p className="mt-1.5 text-[11px] leading-relaxed text-primary">
+                  <span className="font-semibold">{t("suggestedFitFor")} {profileName()}: </span>
+                  {t(fitKey)}
+                </p>
+                {item.fit_note ? (
+                  <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+                    <span className="font-semibold">{t("fitNote")}: </span>
+                    {item.fit_note}
+                  </p>
+                ) : null}
                 {item.fabric_care ? (
                   <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
                     <span className="font-semibold">{t("care")}: </span>
