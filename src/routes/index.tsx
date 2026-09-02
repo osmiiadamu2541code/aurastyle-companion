@@ -43,6 +43,13 @@ function Home() {
   const { t, lang, profile, profileName } = useApp();
   const weather = getTodayWeather();
   const advice = OUTFIT[lang][profile][weather.condition];
+  const { data: fit } = useQuery({
+    queryKey: ["measurements", profile],
+    queryFn: () => fetchMeasurements(profile),
+  });
+  const fitKey = fitLabelKey(fit?.preferred_fit ?? "regular") as PreferredFit;
+  const copy = FIT_COPY[lang][profile];
+  const layering = LAYERING_COPY[lang][weather.condition][fitKey];
 
   return (
     <div className="space-y-4 px-4 py-4">
