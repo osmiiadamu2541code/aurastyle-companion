@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AurafitRouteImport } from './routes/aurafit'
+import { Route as MeasurementsRouteImport } from './routes/measurements'
 import { Route as WardrobeRouteImport } from './routes/wardrobe'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const AurafitRoute = AurafitRouteImport.update({
   path: '/aurafit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MeasurementsRoute = MeasurementsRouteImport.update({
+  id: '/measurements',
+  path: '/measurements',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WardrobeRoute = WardrobeRouteImport.update({
   id: '/wardrobe',
   path: '/wardrobe',
@@ -32,30 +38,34 @@ const WardrobeRoute = WardrobeRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/aurafit': typeof AurafitRoute
+  '/measurements': typeof MeasurementsRoute
   '/wardrobe': typeof WardrobeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/aurafit': typeof AurafitRoute
+  '/measurements': typeof MeasurementsRoute
   '/wardrobe': typeof WardrobeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/aurafit': typeof AurafitRoute
+  '/measurements': typeof MeasurementsRoute
   '/wardrobe': typeof WardrobeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/aurafit' | '/wardrobe'
+  fullPaths: '/' | '/aurafit' | '/measurements' | '/wardrobe'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/aurafit' | '/wardrobe'
-  id: '__root__' | '/' | '/aurafit' | '/wardrobe'
+  to: '/' | '/aurafit' | '/measurements' | '/wardrobe'
+  id: '__root__' | '/' | '/aurafit' | '/measurements' | '/wardrobe'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AurafitRoute: typeof AurafitRoute
+  MeasurementsRoute: typeof MeasurementsRoute
   WardrobeRoute: typeof WardrobeRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AurafitRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/measurements': {
+      id: '/measurements'
+      path: '/measurements'
+      fullPath: '/measurements'
+      preLoaderRoute: typeof MeasurementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/wardrobe': {
       id: '/wardrobe'
       path: '/wardrobe'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AurafitRoute: AurafitRoute,
+  MeasurementsRoute: MeasurementsRoute,
   WardrobeRoute: WardrobeRoute,
 }
 export const routeTree = rootRouteImport
