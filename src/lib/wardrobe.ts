@@ -13,6 +13,8 @@ export type WardrobeItem = {
   occasion: string;
   fabric_care: string;
   fit_note: string;
+  image_url: string;
+  photo_url?: string | null;
   created_at: string;
 };
 
@@ -25,7 +27,10 @@ export type NewItem = {
   occasion: string;
   fabric_care: string;
   fit_note: string;
+  image_url?: string;
+  photoFile?: File | null;
 };
+
 
 export const SEASONS = ["summer", "winter", "rainy", "allseason"] as const;
 export const OCCASIONS = ["casual", "work", "formal", "event"] as const;
@@ -51,6 +56,16 @@ export function itemName(item: WardrobeItem, lang: Lang) {
   return item.name;
 }
 
+export const PHOTO_BUCKET = "wardrobe-photos";
+
+async function withPhotoUrls(items: WardrobeItem[]): Promise<WardrobeItem[]> {
+  const paths = items.map((i) => i.image_url).filter((p): p is string => !!p);
+  if (paths.length === 0) return items;
+  const { data } = await supabase.storage.from(PHOTO_BUCKET).createSignedUrls(paths, 60 * 60 * 24 * 7);
+  const map = new Map((data ?? []).map((d) => [d.path, d.signedUrl]));
+  return items.map((i) => ({ ...i, photo_url: i.image_url ? (map.get(i.image_url) ?? null) : null }));
+}
+
 export async function fetchWardrobe(profile: ProfileId): Promise<WardrobeItem[]> {
   const { data, error } = await supabase
     .from("wardrobe_items")
@@ -58,16 +73,34 @@ export async function fetchWardrobe(profile: ProfileId): Promise<WardrobeItem[]>
     .eq("profile", profile)
     .order("created_at", { ascending: true });
   if (error) throw error;
-  return (data ?? []) as WardrobeItem[];
+  return withPhotoUrls((data ?? []) as WardrobeItem[]);
+}
+
+export async function uploadWardrobePhoto(profile: ProfileId, file: File): Promise<string> {
+  const ext = (file.name.split(".").pop() ?? "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+  const path = `${profile}/${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage
+    .from(PHOTO_BUCKET)
+    .upload(path, file, { contentType: file.type || "image/jpeg", upsert: false });
+  if (error) throw error;
+  return path;
 }
 
 export async function addWardrobeItem(item: NewItem): Promise<WardrobeItem> {
-  const { data, error } = await supabase.from("wardrobe_items").insert(item).select().single();
+  const { photoFile, ...rest } = item;
+  const image_url = photoFile ? await uploadWardrobePhoto(item.profile, photoFile) : (item.image_url ?? "");
+  const { data, error } = await supabase
+    .from("wardrobe_items")
+    .insert({ ...rest, image_url })
+    .select()
+    .single();
   if (error) throw error;
   return data as WardrobeItem;
 }
 
-export async function deleteWardrobeItem(id: string): Promise<void> {
+export async function deleteWardrobeItem(id: string, imagePath?: string): Promise<void> {
   const { error } = await supabase.from("wardrobe_items").delete().eq("id", id);
   if (error) throw error;
+  if (imagePath) await supabase.storage.from(PHOTO_BUCKET).remove([imagePath]);
 }
+

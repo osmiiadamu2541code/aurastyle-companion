@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { useApp } from "@/lib/app-context";
 import type { ProfileId } from "@/lib/i18n";
@@ -17,6 +18,8 @@ type Props = {
   onSave: (item: NewItem) => Promise<void>;
 };
 
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+
 export function UploadModal({ open, onClose, onSave }: Props) {
   const { t, profile, profileName } = useApp();
   const [name, setName] = useState("");
@@ -28,6 +31,19 @@ export function UploadModal({ open, onClose, onSave }: Props) {
   const [fitNote, setFitNote] = useState("");
   const [saving, setSaving] = useState(false);
   const [askWhose, setAskWhose] = useState(false);
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!photo) {
+      setPhotoPreview(null);
+      return;
+    }
+    const url = URL.createObjectURL(photo);
+    setPhotoPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [photo]);
 
   if (!open) return null;
 
@@ -41,6 +57,19 @@ export function UploadModal({ open, onClose, onSave }: Props) {
     setOccasion("casual");
     setAskWhose(false);
     setSaving(false);
+    setPhoto(null);
+    if (fileRef.current) fileRef.current.value = "";
+  };
+
+  const onPickFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > MAX_PHOTO_BYTES) {
+      toast.error(t("photoTooBig"));
+      e.target.value = "";
+      return;
+    }
+    setPhoto(file);
   };
 
   const commit = async (target: ProfileId) => {
@@ -55,6 +84,7 @@ export function UploadModal({ open, onClose, onSave }: Props) {
         occasion,
         fabric_care: care.trim(),
         fit_note: fitNote.trim(),
+        photoFile: photo,
       });
       reset();
       onClose();
@@ -72,6 +102,7 @@ export function UploadModal({ open, onClose, onSave }: Props) {
     }
     void commit(profile);
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 px-0 backdrop-blur-sm sm:items-center sm:px-4">
@@ -143,11 +174,51 @@ export function UploadModal({ open, onClose, onSave }: Props) {
             </div>
 
             <div className="mb-3 flex items-center gap-3 rounded-2xl bg-secondary p-3">
-              <div className={`grid h-16 w-16 place-items-center rounded-xl bg-linear-to-br ${TILE_COLORS[color]} text-3xl`}>
-                {icon}
+              {photoPreview ? (
+                <img
+                  src={photoPreview}
+                  alt={name || t("photo")}
+                  className="h-16 w-16 rounded-xl object-cover"
+                />
+              ) : (
+                <div className={`grid h-16 w-16 place-items-center rounded-xl bg-linear-to-br ${TILE_COLORS[color]} text-3xl`}>
+                  {icon}
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="text-xs leading-relaxed text-muted-foreground">{t("photoHint")}</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => fileRef.current?.click()}
+                    className="rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-warm"
+                  >
+                    📷 {t("choosePhoto")}
+                  </button>
+                  {photo ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPhoto(null);
+                        if (fileRef.current) fileRef.current.value = "";
+                      }}
+                      className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground"
+                    >
+                      {t("removePhoto")}
+                    </button>
+                  ) : null}
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground">{t("photo")}</p>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                aria-label={t("choosePhoto")}
+                onChange={onPickFile}
+                className="hidden"
+              />
             </div>
+
 
             <label className="mb-1 block text-xs font-medium text-muted-foreground">{t("name")}</label>
             <input

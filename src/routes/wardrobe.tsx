@@ -64,7 +64,8 @@ function Wardrobe() {
   });
 
   const remove = useMutation({
-    mutationFn: (id: string) => deleteWardrobeItem(id),
+    mutationFn: ({ id, path }: { id: string; path?: string }) => deleteWardrobeItem(id, path),
+
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ["wardrobe", profile] });
       toast.success(t("deleted"));
@@ -119,11 +120,21 @@ function Wardrobe() {
         <div className="mt-4 grid grid-cols-2 gap-3">
           {filtered.map((item) => (
             <article key={item.id} className="overflow-hidden rounded-3xl border border-border bg-card shadow-warm">
-              <div
-                className={`grid h-28 place-items-center bg-linear-to-br ${TILE_COLORS[item.color] ?? TILE_COLORS['sand']} text-5xl`}
-              >
-                {item.icon}
-              </div>
+              {item.photo_url ? (
+                <img
+                  src={item.photo_url}
+                  alt={itemName(item, lang)}
+                  loading="lazy"
+                  className="h-28 w-full object-cover"
+                />
+              ) : (
+                <div
+                  className={`grid h-28 place-items-center bg-linear-to-br ${TILE_COLORS[item.color] ?? TILE_COLORS['sand']} text-5xl`}
+                >
+                  {item.icon}
+                </div>
+              )}
+
               <div className="p-3">
                 <h3 className="text-sm leading-snug font-semibold">{itemName(item, lang)}</h3>
                 <div className="mt-1.5 flex flex-wrap gap-1">
@@ -151,7 +162,7 @@ function Wardrobe() {
                   </p>
                 ) : null}
                 <button
-                  onClick={() => remove.mutate(item.id)}
+                  onClick={() => remove.mutate({ id: item.id, ...(item.image_url ? { path: item.image_url } : {}) })}
                   className="mt-2.5 w-full rounded-xl border border-destructive/30 px-2 py-1.5 text-[11px] font-medium text-destructive"
                 >
                   🗑 {t("delete")}
