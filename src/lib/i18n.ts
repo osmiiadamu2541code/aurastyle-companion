@@ -278,7 +278,13 @@ const om: Dict = {
   care: "Kunuunsa huccuu",
   newItem: "Waan haaraa dabali",
   photo: "Suuraa",
+  choosePhoto: "Meeshaa kee irraa suuraa filadhu",
+  photoHint: "Suuraa uffatichaa dhugaa dabali, yookaan fakkii gaarii armaan gadii fayyadami.",
+  removePhoto: "Suuraa haqi",
+  uploadingPhoto: "Suuraan kee olkaa'amaa jira...",
+  photoTooBig: "Suuraan kun xiqqoo guddaadha — maaloo kan 10MB gadi filadhu.",
   pickIcon: "Suuraa filadhu",
+
   name: "Maqaa uffataa",
   namePlaceholder: "fkn. Shamiizii liinan kiriimii",
   carePlaceholder: "fkn. Bishaan qabbanaa'aan miiccadhu, gaaddisatti gogsi",
