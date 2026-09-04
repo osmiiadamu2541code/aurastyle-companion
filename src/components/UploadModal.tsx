@@ -174,11 +174,51 @@ export function UploadModal({ open, onClose, onSave }: Props) {
             </div>
 
             <div className="mb-3 flex items-center gap-3 rounded-2xl bg-secondary p-3">
-              <div className={`grid h-16 w-16 place-items-center rounded-xl bg-linear-to-br ${TILE_COLORS[color]} text-3xl`}>
-                {icon}
+              {photoPreview ? (
+                <img
+                  src={photoPreview}
+                  alt={name || t("photo")}
+                  className="h-16 w-16 rounded-xl object-cover"
+                />
+              ) : (
+                <div className={`grid h-16 w-16 place-items-center rounded-xl bg-linear-to-br ${TILE_COLORS[color]} text-3xl`}>
+                  {icon}
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="text-xs leading-relaxed text-muted-foreground">{t("photoHint")}</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => fileRef.current?.click()}
+                    className="rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-warm"
+                  >
+                    📷 {t("choosePhoto")}
+                  </button>
+                  {photo ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPhoto(null);
+                        if (fileRef.current) fileRef.current.value = "";
+                      }}
+                      className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground"
+                    >
+                      {t("removePhoto")}
+                    </button>
+                  ) : null}
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground">{t("photo")}</p>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                aria-label={t("choosePhoto")}
+                onChange={onPickFile}
+                className="hidden"
+              />
             </div>
+
 
             <label className="mb-1 block text-xs font-medium text-muted-foreground">{t("name")}</label>
             <input
