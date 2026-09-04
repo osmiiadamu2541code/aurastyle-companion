@@ -166,7 +166,13 @@ const am: Dict = {
   care: "የጨርቅ እንክብካቤ",
   newItem: "አዲስ ልብስ ጨምር",
   photo: "ፎቶ",
+  choosePhoto: "ከመሣሪያህ ፎቶ ምረጥ",
+  photoHint: "የልብሱን እውነተኛ ፎቶ ጨምር፣ ወይም ከታች ያለውን ምስል ተጠቀም።",
+  removePhoto: "ፎቶውን አስወግድ",
+  uploadingPhoto: "ፎቶህ እየተቀመጠ ነው...",
+  photoTooBig: "ፎቶው ትንሽ ትልቅ ነው — እባክህ ከ10MB በታች ምረጥ።",
   pickIcon: "የፎቶ ምስል ምረጥ",
+
   name: "የልብስ ስም",
   namePlaceholder: "ለምሳሌ፦ ክሬም የበፍታ ሸሚዝ",
   carePlaceholder: "ለምሳሌ፦ በቀዝቃዛ ውሃ እጠብ፣ በጥላ አድርቅ",
