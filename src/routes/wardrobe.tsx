@@ -162,7 +162,7 @@ function Wardrobe() {
                   </p>
                 ) : null}
                 <button
-                  onClick={() => remove.mutate(item.id)}
+                  onClick={() => remove.mutate({ id: item.id, ...(item.image_url ? { path: item.image_url } : {}) })}
                   className="mt-2.5 w-full rounded-xl border border-destructive/30 px-2 py-1.5 text-[11px] font-medium text-destructive"
                 >
                   🗑 {t("delete")}
