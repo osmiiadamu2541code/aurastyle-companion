@@ -76,6 +76,7 @@ export type Database = {
           fit_note: string
           icon: string
           id: string
+          image_url: string
           name: string
           name_am: string | null
           name_om: string | null
@@ -90,6 +91,7 @@ export type Database = {
           fit_note?: string
           icon?: string
           id?: string
+          image_url?: string
           name: string
           name_am?: string | null
           name_om?: string | null
@@ -104,6 +106,7 @@ export type Database = {
           fit_note?: string
           icon?: string
           id?: string
+          image_url?: string
           name?: string
           name_am?: string | null
           name_om?: string | null
