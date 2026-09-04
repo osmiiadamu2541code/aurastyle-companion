@@ -53,7 +53,13 @@ const en: Dict = {
   care: "Fabric care",
   newItem: "Add something new",
   photo: "Photo",
+  choosePhoto: "Choose a photo from your device",
+  photoHint: "Add a real picture of the piece, or keep the pretty tile below.",
+  removePhoto: "Remove photo",
+  uploadingPhoto: "Saving your photo...",
+  photoTooBig: "That picture is a little too large — please pick one under 10MB.",
   pickIcon: "Pick a photo tile",
+
   name: "Item name",
   namePlaceholder: "e.g. Cream linen shirt",
   carePlaceholder: "e.g. Cold wash, hang dry in shade, warm iron",
