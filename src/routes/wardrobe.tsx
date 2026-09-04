@@ -64,7 +64,8 @@ function Wardrobe() {
   });
 
   const remove = useMutation({
-    mutationFn: (id: string) => deleteWardrobeItem(id),
+    mutationFn: ({ id, path }: { id: string; path?: string }) => deleteWardrobeItem(id, path),
+
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ["wardrobe", profile] });
       toast.success(t("deleted"));
