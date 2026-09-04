@@ -13,6 +13,8 @@ export type WardrobeItem = {
   occasion: string;
   fabric_care: string;
   fit_note: string;
+  image_url: string;
+  photo_url?: string | null;
   created_at: string;
 };
 
@@ -25,7 +27,10 @@ export type NewItem = {
   occasion: string;
   fabric_care: string;
   fit_note: string;
+  image_url?: string;
+  photoFile?: File | null;
 };
+
 
 export const SEASONS = ["summer", "winter", "rainy", "allseason"] as const;
 export const OCCASIONS = ["casual", "work", "formal", "event"] as const;
