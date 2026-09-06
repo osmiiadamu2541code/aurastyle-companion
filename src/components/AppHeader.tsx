@@ -1,19 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 
+import { fetchAllAvatars } from "@/lib/avatars";
 import { useApp } from "@/lib/app-context";
-import { LANGS, PROFILE_NAMES, type Lang, type ProfileId } from "@/lib/i18n";
-
-const PROFILE_ICONS: Record<ProfileId, string> = {
-  usman: "🧔",
-  wife: "👩",
-  mother: "👵",
-  kids: "🧒",
-};
-
-const PROFILE_ORDER: ProfileId[] = ["usman", "wife", "mother", "kids"];
+import { LANGS, PROFILE_NAMES, type Lang } from "@/lib/i18n";
+import { PROFILE_ICONS, PROFILE_ORDER } from "@/lib/profile-icons";
 
 export function AppHeader() {
   const { lang, setLang, profile, setProfile, t } = useApp();
+  const { data: avatars } = useQuery({ queryKey: ["avatars"], queryFn: fetchAllAvatars });
 
   return (
     <header className="sticky top-0 z-30 border-b border-border/60 bg-linear-to-b from-cream to-background/95 backdrop-blur-md">
@@ -68,7 +63,15 @@ export function AppHeader() {
                     : "border-border bg-card text-muted-foreground"
                 }`}
               >
-                <span className="text-sm">{PROFILE_ICONS[p]}</span>
+                {avatars?.[p] ? (
+                  <img
+                    src={avatars[p]}
+                    alt={PROFILE_NAMES[lang][p]}
+                    className="h-6 w-6 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-sm">{PROFILE_ICONS[p]}</span>
+                )}
                 {PROFILE_NAMES[lang][p]}
               </button>
             ))}
