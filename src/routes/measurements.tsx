@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { AvatarPicker } from "@/components/AvatarPicker";
 import { useApp } from "@/lib/app-context";
 import {
   fetchMeasurements,
@@ -127,6 +128,8 @@ function MeasurementsPage() {
       <p className="mt-3 rounded-3xl border border-primary/25 bg-primary/8 p-4 text-sm leading-relaxed text-foreground/85">
         {t("measurementsIntro")}
       </p>
+
+      <AvatarPicker />
 
       {isLoading ? (
         <p className="py-10 text-center text-sm text-muted-foreground">{t("loading")}</p>
