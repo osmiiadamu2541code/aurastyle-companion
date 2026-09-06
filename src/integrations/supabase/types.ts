@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       profile_measurements: {
         Row: {
+          avatar_url: string
           chest_cm: number | null
           comfort_needs: string
           created_at: string
@@ -33,6 +34,7 @@ export type Database = {
           weight_kg: number | null
         }
         Insert: {
+          avatar_url?: string
           chest_cm?: number | null
           comfort_needs?: string
           created_at?: string
@@ -50,6 +52,7 @@ export type Database = {
           weight_kg?: number | null
         }
         Update: {
+          avatar_url?: string
           chest_cm?: number | null
           comfort_needs?: string
           created_at?: string
