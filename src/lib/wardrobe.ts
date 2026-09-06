@@ -58,12 +58,17 @@ export function itemName(item: WardrobeItem, lang: Lang) {
 
 export const PHOTO_BUCKET = "wardrobe-photos";
 
+/** A photo only belongs to an item when it lives inside that item's own profile folder. */
+function ownsPhoto(item: WardrobeItem): boolean {
+  return !!item.image_url && item.image_url.startsWith(`${item.profile}/`);
+}
+
 async function withPhotoUrls(items: WardrobeItem[]): Promise<WardrobeItem[]> {
-  const paths = items.map((i) => i.image_url).filter((p): p is string => !!p);
-  if (paths.length === 0) return items;
+  const paths = items.filter(ownsPhoto).map((i) => i.image_url);
+  if (paths.length === 0) return items.map((i) => ({ ...i, photo_url: null }));
   const { data } = await supabase.storage.from(PHOTO_BUCKET).createSignedUrls(paths, 60 * 60 * 24 * 7);
   const map = new Map((data ?? []).map((d) => [d.path, d.signedUrl]));
-  return items.map((i) => ({ ...i, photo_url: i.image_url ? (map.get(i.image_url) ?? null) : null }));
+  return items.map((i) => ({ ...i, photo_url: ownsPhoto(i) ? (map.get(i.image_url) ?? null) : null }));
 }
 
 export async function fetchWardrobe(profile: ProfileId): Promise<WardrobeItem[]> {
