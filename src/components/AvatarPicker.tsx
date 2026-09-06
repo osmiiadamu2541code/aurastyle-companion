@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { PROFILE_ICONS } from "@/lib/profile-icons";
@@ -12,6 +12,11 @@ export function AvatarPicker() {
   const { t, profile, profileName } = useApp();
   const qc = useQueryClient();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLocalPreview(null);
+  }, [profile]);
 
   const { data: avatar } = useQuery({
     queryKey: ["avatar", profile],
@@ -36,6 +41,7 @@ export function AvatarPicker() {
     mutationFn: () => removeAvatar(profile),
     onSuccess: () => {
       refresh();
+      setLocalPreview(null);
       toast.success(t("avatarRemoved"));
     },
     onError: () => toast.error("Something went wrong, let's try again."),
@@ -49,15 +55,20 @@ export function AvatarPicker() {
       if (fileRef.current) fileRef.current.value = "";
       return;
     }
+    const url = URL.createObjectURL(file);
+    setLocalPreview((old) => {
+      if (old) URL.revokeObjectURL(old);
+      return url;
+    });
     upload.mutate(file);
     if (fileRef.current) fileRef.current.value = "";
   };
 
   return (
     <section className="mt-4 flex items-center gap-3 rounded-3xl border border-border bg-card p-4 shadow-warm">
-      {avatar?.url ? (
+      {localPreview || avatar?.url ? (
         <img
-          src={avatar.url}
+          src={localPreview ?? avatar?.url ?? ""}
           alt={profileName()}
           className="h-16 w-16 shrink-0 rounded-full border-2 border-primary/40 object-cover"
         />
@@ -76,9 +87,9 @@ export function AvatarPicker() {
             disabled={upload.isPending || clear.isPending}
             className="rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-warm disabled:opacity-60"
           >
-            {upload.isPending ? t("savingAvatar") : `📷 ${avatar?.url ? t("changeAvatar") : t("addAvatar")}`}
+            {upload.isPending ? t("savingAvatar") : `📷 ${localPreview || avatar?.url ? t("changeAvatar") : t("addAvatar")}`}
           </button>
-          {avatar?.url ? (
+          {localPreview || avatar?.url ? (
             <button
               type="button"
               onClick={() => clear.mutate()}
