@@ -155,6 +155,10 @@ function AuraFit() {
         </article>
       </section>
 
+      <section>
+        <h2 className="mb-2 text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+          {t("sharedGuides")}
+        </h2>
         <div className="space-y-3">
           {guides.map((g) => (
             <article key={g.id} className="rounded-3xl border border-border bg-card p-5 shadow-warm">
