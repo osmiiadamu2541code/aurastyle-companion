@@ -1,7 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { useApp } from "@/lib/app-context";
 import { POSTURE, WORKOUTS } from "@/lib/content";
+import { fetchMeasurements } from "@/lib/measurements";
+import { PROFILE_FIT } from "@/lib/profile-fit";
 
 export const Route = createFileRoute("/aurafit")({
   head: () => ({
