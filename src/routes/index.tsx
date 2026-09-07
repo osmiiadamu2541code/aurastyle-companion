@@ -50,6 +50,29 @@ function Home() {
   const fitKey = fitLabelKey(fit?.preferred_fit ?? "regular") as PreferredFit;
   const copy = FIT_COPY[lang][profile];
   const layering = LAYERING_COPY[lang][weather.condition][fitKey];
+  const { data: avatar } = useQuery({ queryKey: ["avatar", profile], queryFn: () => fetchAvatar(profile) });
+  const { data: closet } = useQuery({ queryKey: ["wardrobe", profile], queryFn: () => fetchWardrobe(profile) });
+
+  const words = (s: string) => s.toLowerCase().replace(/[^\p{L}\s]/gu, " ").split(/\s+/).filter((w) => w.length > 3);
+  const board = advice.pieces.slice(0, 3).map((piece, i) => {
+    const pw = words(piece);
+    let best: { photo: string | null; icon: string } | null = null;
+    let bestScore = 0;
+    for (const item of closet ?? []) {
+      const iw = words(`${item.name} ${item.name_am ?? ""} ${item.name_om ?? ""}`);
+      const score = iw.filter((w) => pw.includes(w)).length;
+      if (score > bestScore) {
+        bestScore = score;
+        best = { photo: item.photo_url ?? null, icon: item.icon };
+      }
+    }
+    return {
+      key: `${piece}-${i}`,
+      label: piece,
+      photo: best?.photo ?? null,
+      icon: best?.icon ?? ["👕", "🧥", "👟"][i % 3],
+    };
+  });
 
   return (
     <div className="space-y-4 px-4 py-4">
