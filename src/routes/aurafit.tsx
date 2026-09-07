@@ -204,7 +204,7 @@ function AuraFit() {
 
       <section>
         <h2 className="mb-2 text-xs font-semibold tracking-widest text-muted-foreground uppercase">
-          {t("workoutTitle")}
+          {t("sharedWorkouts")}
         </h2>
         <div className="space-y-3">
           {workouts.map((w) => (
