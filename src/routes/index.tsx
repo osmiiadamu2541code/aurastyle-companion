@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { useApp } from "@/lib/app-context";
+import { fetchAvatar } from "@/lib/avatars";
+import { fetchWardrobe } from "@/lib/wardrobe";
 import { CONDITION_LABEL, getTodayWeather, OUTFIT } from "@/lib/content";
 import {
   bottomSize,
