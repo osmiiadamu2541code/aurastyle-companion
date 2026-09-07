@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { useApp } from "@/lib/app-context";
+import { fetchAvatar } from "@/lib/avatars";
+import { fetchWardrobe } from "@/lib/wardrobe";
 import { CONDITION_LABEL, getTodayWeather, OUTFIT } from "@/lib/content";
 import {
   bottomSize,
@@ -50,6 +52,29 @@ function Home() {
   const fitKey = fitLabelKey(fit?.preferred_fit ?? "regular") as PreferredFit;
   const copy = FIT_COPY[lang][profile];
   const layering = LAYERING_COPY[lang][weather.condition][fitKey];
+  const { data: avatar } = useQuery({ queryKey: ["avatar", profile], queryFn: () => fetchAvatar(profile) });
+  const { data: closet } = useQuery({ queryKey: ["wardrobe", profile], queryFn: () => fetchWardrobe(profile) });
+
+  const words = (s: string) => s.toLowerCase().replace(/[^\p{L}\s]/gu, " ").split(/\s+/).filter((w) => w.length > 3);
+  const board = advice.pieces.slice(0, 3).map((piece, i) => {
+    const pw = words(piece);
+    let best: { photo: string | null; icon: string } | null = null;
+    let bestScore = 0;
+    for (const item of closet ?? []) {
+      const iw = words(`${item.name} ${item.name_am ?? ""} ${item.name_om ?? ""}`);
+      const score = iw.filter((w) => pw.includes(w)).length;
+      if (score > bestScore) {
+        bestScore = score;
+        best = { photo: item.photo_url ?? null, icon: item.icon };
+      }
+    }
+    return {
+      key: `${piece}-${i}`,
+      label: piece,
+      photo: best?.photo ?? null,
+      icon: best?.icon ?? ["👕", "🧥", "👟"][i % 3],
+    };
+  });
 
   return (
     <div className="space-y-4 px-4 py-4">
@@ -82,6 +107,49 @@ function Home() {
               <p className="mt-0.5 text-sm font-semibold">{value}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-primary/25 bg-linear-to-br from-cream to-sand/40 p-5 shadow-warm">
+        <h2 className="font-display text-lg font-semibold">{t("styleBoard")}</h2>
+        <p className="mt-0.5 text-xs text-muted-foreground">{t("styleBoardHint")}</p>
+        <div className="mt-4 flex items-start gap-3">
+          <div className="shrink-0 text-center">
+            {avatar?.url ? (
+              <img
+                src={avatar.url}
+                alt={profileName()}
+                className="h-20 w-20 rounded-3xl border-2 border-primary/40 object-cover shadow-warm"
+              />
+            ) : (
+              <Link
+                to="/measurements"
+                className="grid h-20 w-20 place-items-center rounded-3xl border-2 border-dashed border-primary/40 bg-card text-2xl"
+              >
+                📷
+              </Link>
+            )}
+            <p className="mt-1.5 max-w-20 truncate text-[11px] font-medium text-muted-foreground">
+              {avatar?.url ? profileName() : t("addYourPhoto")}
+            </p>
+          </div>
+          <div className="grid min-w-0 flex-1 grid-cols-3 gap-2">
+            {board.map((tile) => (
+              <div key={tile.key} className="min-w-0">
+                <div className="aspect-square overflow-hidden rounded-2xl border border-border bg-linear-to-br from-honey/40 to-sand/50">
+                  {tile.photo ? (
+                    <img src={tile.photo} alt={tile.label} className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="grid h-full w-full place-items-center text-2xl">{tile.icon}</span>
+                  )}
+                </div>
+                <p className="mt-1 truncate text-[10px] text-muted-foreground">{tile.label}</p>
+                <p className="truncate text-[9px] text-primary">
+                  {tile.photo ? t("fromCloset") : t("suggestedPiece")}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
