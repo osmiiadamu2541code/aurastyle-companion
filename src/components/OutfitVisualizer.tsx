@@ -120,7 +120,7 @@ export function OutfitVisualizer({
     return SLOTS.map((slot) => ({ slot, options: build(slot) })).filter((l) => l.options.length > 0);
   }, [items, pieces, lang]);
 
-  const pick = (l: Layer) => l.options[(index[l.slot] ?? 0) % l.options.length];
+  const pick = (l: Layer) => l.options[(index[l.slot] ?? 0) % l.options.length]!;
   const advance = (l: Layer) =>
     setIndex((prev) => ({ ...prev, [l.slot]: ((prev[l.slot] ?? 0) + 1) % l.options.length }));
 
