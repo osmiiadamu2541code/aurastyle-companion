@@ -217,9 +217,9 @@ export function OutfitVisualizer({
               return (
                 <div
                   key={l.slot}
-                  className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2"
+                  className="rounded-2xl border border-border bg-card px-3 py-2"
                 >
-                  <button type="button" onClick={() => advance(l)} className="min-w-0 text-left">
+                  <button type="button" onClick={() => advance(l)} className="w-full min-w-0 text-left">
                     <p className="text-[10px] font-medium tracking-wide text-muted-foreground uppercase">
                       {t(SLOT_LABEL_KEY[l.slot])}
                     </p>
@@ -230,7 +230,7 @@ export function OutfitVisualizer({
                       {isHidden ? t("layerHidden") : opt.fromCloset ? t("fromCloset") : t("suggestedPiece")}
                     </p>
                   </button>
-                  <div className="flex shrink-0 gap-1">
+                  <div className="mt-1.5 flex flex-wrap gap-1">
                     {l.options.length > 1 ? (
                       <button
                         type="button"
