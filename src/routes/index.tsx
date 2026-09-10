@@ -153,6 +153,8 @@ function Home() {
         </div>
       </section>
 
+      <OutfitVisualizer pieces={advice.pieces} items={closet ?? []} avatarUrl={avatar?.url ?? null} />
+
       <section className="rounded-3xl border border-border bg-card p-5 shadow-warm">
         <h2 className="font-display text-lg font-semibold">{t("outfitTitle")}</h2>
         <ul className="mt-3 space-y-2">
