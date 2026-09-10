@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { OutfitVisualizer } from "@/components/OutfitVisualizer";
 import { useApp } from "@/lib/app-context";
 import { fetchAvatar } from "@/lib/avatars";
 import { fetchWardrobe } from "@/lib/wardrobe";
@@ -152,6 +153,8 @@ function Home() {
           </div>
         </div>
       </section>
+
+      <OutfitVisualizer pieces={advice.pieces} items={closet ?? []} avatarUrl={avatar?.url ?? null} />
 
       <section className="rounded-3xl border border-border bg-card p-5 shadow-warm">
         <h2 className="font-display text-lg font-semibold">{t("outfitTitle")}</h2>
