@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { OutfitVisualizer } from "@/components/OutfitVisualizer";
 import { useApp } from "@/lib/app-context";
 import { fetchAvatar } from "@/lib/avatars";
 import { fetchWardrobe } from "@/lib/wardrobe";
