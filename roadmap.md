@@ -9,3 +9,7 @@
 - [x] Per-profile avatar upload (preview, replace, remove) stored in private profile-avatars bucket
 - [x] Avatars shown in header profile switcher + size & fit page
 - [x] Wardrobe photos isolated to per-profile storage folders with folder-scoped policies
+- [ ] Redesign Home try-on as an interactive editorial paper-doll composite
+- [ ] Complete Amharic and Afaan Oromoo Size & Fit/posture translations
+- [ ] Make profile avatars persist reliably across reloads, tabs, and profile switches
+- [ ] Verify the visualizer, translations, avatar refresh, and build health
