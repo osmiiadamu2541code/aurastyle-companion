@@ -8,7 +8,13 @@ import { PROFILE_ICONS, PROFILE_ORDER } from "@/lib/profile-icons";
 
 export function AppHeader() {
   const { lang, setLang, profile, setProfile, t } = useApp();
-  const { data: avatars } = useQuery({ queryKey: ["avatars"], queryFn: fetchAllAvatars });
+  const { data: avatars } = useQuery({
+    queryKey: ["avatars"],
+    queryFn: fetchAllAvatars,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
 
   return (
     <header className="sticky top-0 z-30 border-b border-border/60 bg-linear-to-b from-cream to-background/95 backdrop-blur-md">

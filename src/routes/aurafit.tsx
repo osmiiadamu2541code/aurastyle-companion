@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { useApp } from "@/lib/app-context";
 import { POSTURE, WORKOUTS } from "@/lib/content";
-import { fetchMeasurements } from "@/lib/measurements";
+import { fetchMeasurements, localizedMeasurementNotes } from "@/lib/measurements";
 import { PROFILE_FIT } from "@/lib/profile-fit";
 
 export const Route = createFileRoute("/aurafit")({
@@ -34,7 +34,8 @@ function AuraFit() {
     queryKey: ["measurements", profile],
     queryFn: () => fetchMeasurements(profile),
   });
-  const notes = [fit?.posture_notes, fit?.comfort_needs, fit?.mobility_notes].filter(Boolean) as string[];
+  const shownFit = fit ? localizedMeasurementNotes(fit, profile, lang) : null;
+  const notes = [shownFit?.posture_notes, shownFit?.comfort_needs, shownFit?.mobility_notes].filter(Boolean) as string[];
 
   return (
     <div className="space-y-5 px-4 py-4">
