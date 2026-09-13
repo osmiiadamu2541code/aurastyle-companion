@@ -37,6 +37,41 @@ export type MeasurementsDraft = {
   mobility_notes: string;
 };
 
+const STARTER_NOTES: Record<ProfileId, Record<Lang, Pick<MeasurementsDraft, "comfort_needs" | "posture_notes" | "mobility_notes">>> = {
+  usman: {
+    en: { comfort_needs: "Prefers breathable cotton and linen; collars must not feel tight after a long day at the desk.", posture_notes: "Shoulders roll forward from desk work — structured shoulders and a slightly longer back hem help him stand tall.", mobility_notes: "Mild lower-back stiffness in the mornings; avoids very stiff waistbands." },
+    am: { comfort_needs: "አየር የሚያስተላልፍ ጥጥና በፍታ ይመርጣል፤ ረጅም የሥራ ቀን በኋላ አንገትጌው መጥበብ የለበትም።", posture_notes: "በጠረጴዛ ሥራ ምክንያት ትከሻዎቹ ወደፊት ያዘነብላሉ፤ ቅርጽ ያለው ትከሻና ትንሽ ረዘም ያለ የኋላ ጫፍ ቀጥ ብሎ እንዲቆም ይረዳዋል።", mobility_notes: "ጠዋት ላይ ትንሽ የወገብ ድርቀት አለ፤ በጣም ደረቅ ወገብ ያላቸውን ልብሶች አይመርጥም።" },
+    om: { comfort_needs: "Jirbii fi liinan qilleensa dabarsu filata; guyyaa dheeraa minjaala biraa booda mormi dhiphachuu hin qabu.", posture_notes: "Hojii minjaalaatiin gatiittiin gara fuulduraatti gadi jedha; gatiittiin boca qabu fi qarqara dugdaa xiqqoo dheeraan qajeelaa dhaabbachuuf gargaara.", mobility_notes: "Ganama mudhiin xiqqoo goga; mudhii uffataa baayʼee jabaataa taʼe irraa fagaata." },
+  },
+  wife: {
+    en: { comfort_needs: "Loves defined waistlines but needs sleeves she can move in all day.", posture_notes: "Stands beautifully upright; open necklines and set-in sleeves keep that line.", mobility_notes: "Sensitive to wool directly on the skin — soft linings or cotton layers underneath." },
+    am: { comfort_needs: "ወገብን የሚያሳይ ልብስ ትወዳለች፤ ግን ቀኑን ሙሉ በነፃነት የምትንቀሳቀስበት እጅጌ ያስፈልጋታል።", posture_notes: "በውበት ቀጥ ብላ ትቆማለች፤ ክፍት አንገትና በትክክል የተሰፋ እጅጌ ያንን መስመር ይጠብቃሉ።", mobility_notes: "ሱፍ በቀጥታ ቆዳዋን ያሳክካል፤ ለስላሳ ውስጠ-ሽፋን ወይም ከስር የጥጥ ልብስ ይመቻል።" },
+    om: { comfort_needs: "Mudhii ifa godhu jaallatti; garuu harki guyyaa guutuu bilisaan sochoʼu ishee barbaachisa.", posture_notes: "Bareedinaan qajeeltee dhaabbatti; mormi banaa fi harki sirriitti hodhame sarara sana eega.", mobility_notes: "Suufiin kallattiidhaan gogaa ishee ni aarsa; keessa laafaa ykn uffata jirbii jalaa barbaaddi." },
+  },
+  mother: {
+    en: { comfort_needs: "Soft, easy fabrics with no scratchy seams; front-opening pieces are easiest to dress in.", posture_notes: "A gentle forward curve at the upper back — higher backs and softly draped fronts sit most comfortably.", mobility_notes: "Knees ache on cold mornings; skirts and trousers that fall below the knee keep them warm." },
+    am: { comfort_needs: "የማይቧጭር ስፌት ያለው ለስላሳና ቀላል ጨርቅ ይመቻታል፤ ከፊት የሚከፈት ልብስ ለመልበስ ቀላል ነው።", posture_notes: "የላይኛው ጀርባ በቀስታ ወደፊት ይጠማዘዛል፤ ከፍ ያለ ጀርባና ለስላሳ ወራጅ ፊት ያለው ልብስ ይበልጥ ያርፋል።", mobility_notes: "በቀዝቃዛ ጠዋት ጉልበቶቿ ያማሉ፤ ከጉልበት በታች የሚወርድ ቀሚስና ሱሪ ያሞቃቸዋል።" },
+    om: { comfort_needs: "Huccuu laafaa, salphaa fi hodhaa hin aarsine barbaaddi; uffanni fuulduraan banamu uffachuuf salphaadha.", posture_notes: "Dugdi gubbaa suuta gara fuulduraatti gora; dugdi ol kaʼaa fi fuulli laafaan gadi buʼu caalaatti mijata.", mobility_notes: "Ganama qabbanaaʼaa jilbi ni dhukkuba; wandaboonii fi kofoon jilba gadi buʼu ni hoʼisu." },
+  },
+  kids: {
+    en: { comfort_needs: "Room to run and climb; elastic waists and easy-pull necklines they can manage alone.", posture_notes: "Still growing — nothing that pinches the shoulders or restricts the arms.", mobility_notes: "Sensitive to tags and rough seams; flat seams and tagless labels are best." },
+    am: { comfort_needs: "ለመሮጥና ለመውጣት በቂ ቦታ፤ ላስቲክ ወገብና በራሳቸው የሚለብሱት ቀላል አንገት ይመቻቸዋል።", posture_notes: "እያደጉ ነው፤ ትከሻን የሚጫን ወይም እጅን የሚገድብ ነገር አይኑር።", mobility_notes: "መለያና ሻካራ ስፌት ያስቸግራቸዋል፤ ጠፍጣፋ ስፌትና መለያ የሌለው ልብስ ይሻላል።" },
+    om: { comfort_needs: "Fiiguu fi yaabuuf iddoo; mudhii laastikii fi morma ofumaan uffachuu dandaʼan barbaadu.", posture_notes: "Ammayyuu guddachaa jiru; wanti gatiittii dhiibu ykn harka daangessu hin jiraatin.", mobility_notes: "Mallattoo fi hodhaa jajjabaadhaaf miira qabu; hodhaa diriiraa fi mallattoo hin qabne filatamaadha." },
+  },
+};
+
+export function localizedMeasurementNotes(measurements: Measurements | MeasurementsDraft, profile: ProfileId, lang: Lang) {
+  if (lang === "en") return measurements;
+  const english = STARTER_NOTES[profile].en;
+  const localized = STARTER_NOTES[profile][lang];
+  return {
+    ...measurements,
+    comfort_needs: measurements.comfort_needs === english.comfort_needs ? localized.comfort_needs : measurements.comfort_needs,
+    posture_notes: measurements.posture_notes === english.posture_notes ? localized.posture_notes : measurements.posture_notes,
+    mobility_notes: measurements.mobility_notes === english.mobility_notes ? localized.mobility_notes : measurements.mobility_notes,
+  };
+}
+
 export async function fetchMeasurements(profile: ProfileId): Promise<Measurements | null> {
   const { data, error } = await supabase
     .from("profile_measurements")

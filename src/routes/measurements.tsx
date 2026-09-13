@@ -7,6 +7,7 @@ import { AvatarPicker } from "@/components/AvatarPicker";
 import { useApp } from "@/lib/app-context";
 import {
   fetchMeasurements,
+  localizedMeasurementNotes,
   PREFERRED_FITS,
   saveMeasurements,
   type MeasurementsDraft,
@@ -48,7 +49,7 @@ const EMPTY: MeasurementsDraft = {
 };
 
 function MeasurementsPage() {
-  const { t, profile, profileName } = useApp();
+  const { t, lang, profile, profileName } = useApp();
   const qc = useQueryClient();
   const [draft, setDraft] = useState<MeasurementsDraft>(EMPTY);
 
@@ -59,23 +60,12 @@ function MeasurementsPage() {
 
   useEffect(() => {
     if (data) {
-      setDraft({
-        height_cm: data.height_cm,
-        weight_kg: data.weight_kg,
-        chest_cm: data.chest_cm,
-        waist_cm: data.waist_cm,
-        hips_cm: data.hips_cm,
-        shoulder_cm: data.shoulder_cm,
-        inseam_cm: data.inseam_cm,
-        preferred_fit: data.preferred_fit,
-        comfort_needs: data.comfort_needs,
-        posture_notes: data.posture_notes,
-        mobility_notes: data.mobility_notes,
-      });
+      const shown = localizedMeasurementNotes(data, profile, lang);
+      setDraft({ height_cm: shown.height_cm, weight_kg: shown.weight_kg, chest_cm: shown.chest_cm, waist_cm: shown.waist_cm, hips_cm: shown.hips_cm, shoulder_cm: shown.shoulder_cm, inseam_cm: shown.inseam_cm, preferred_fit: shown.preferred_fit, comfort_needs: shown.comfort_needs, posture_notes: shown.posture_notes, mobility_notes: shown.mobility_notes });
     } else {
       setDraft(EMPTY);
     }
-  }, [data]);
+  }, [data, lang, profile]);
 
   const save = useMutation({
     mutationFn: () => saveMeasurements(profile, draft),
@@ -83,7 +73,7 @@ function MeasurementsPage() {
       void qc.invalidateQueries({ queryKey: ["measurements", profile] });
       toast.success(t("fitSaved"));
     },
-    onError: () => toast.error("Something went wrong, let's try again."),
+    onError: () => toast.error(t("somethingWrong")),
   });
 
   const numberField = (key: keyof MeasurementsDraft, label: string, unit: string, optional = false) => (

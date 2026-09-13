@@ -21,30 +21,40 @@ export function AvatarPicker() {
   const { data: avatar } = useQuery({
     queryKey: ["avatar", profile],
     queryFn: () => fetchAvatar(profile),
+    staleTime: 0,
+    refetchOnMount: "always",
   });
 
-  const refresh = () => {
-    void qc.invalidateQueries({ queryKey: ["avatar", profile] });
-    void qc.invalidateQueries({ queryKey: ["avatars"] });
+  const refresh = async () => {
+    const fresh = await fetchAvatar(profile);
+    qc.setQueryData(["avatar", profile], fresh);
+    qc.setQueryData<Record<string, string>>(["avatars"], (current) => {
+      const next = { ...(current ?? {}) };
+      if (fresh?.url) next[profile] = fresh.url;
+      else delete next[profile];
+      return next;
+    });
+    await qc.invalidateQueries({ queryKey: ["avatars"], refetchType: "active" });
   };
 
   const upload = useMutation({
     mutationFn: (file: File) => uploadAvatar(profile, file),
-    onSuccess: () => {
-      refresh();
+    onSuccess: async () => {
+      await refresh();
+      setLocalPreview(null);
       toast.success(t("avatarSaved"));
     },
-    onError: () => toast.error("Something went wrong, let's try again."),
+    onError: () => toast.error(t("somethingWrong")),
   });
 
   const clear = useMutation({
     mutationFn: () => removeAvatar(profile),
-    onSuccess: () => {
-      refresh();
+    onSuccess: async () => {
+      await refresh();
       setLocalPreview(null);
       toast.success(t("avatarRemoved"));
     },
-    onError: () => toast.error("Something went wrong, let's try again."),
+    onError: () => toast.error(t("somethingWrong")),
   });
 
   const onPick = (e: React.ChangeEvent<HTMLInputElement>) => {
